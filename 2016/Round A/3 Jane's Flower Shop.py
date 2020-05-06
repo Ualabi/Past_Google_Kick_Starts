@@ -4,6 +4,7 @@ def fun1(m,M):
     ans = [1]
     for x in range(M):
         ans.append(ans[-1]*(1+m))
+        x += 1
     ans[-1] = -ans[-1]
     return ans
 
