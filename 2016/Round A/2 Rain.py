@@ -11,6 +11,10 @@ def inrange(x,y,R,C):
     else:
         return True
 
+ax = [-1,1,0,0]
+ay = [0,0,-1,1]
+maxim = float('inf')
+
 T = int(input())
 for i in range(T):
     ans = 0
@@ -23,8 +27,6 @@ for i in range(T):
         print('Case #{}: {}'.format(i+1,0))
         continue
     
-    ax = [-1,1,0,0]
-    ay = [0,0,-1,1]
     checked = set()
     for x in range(1,R-1):
         for y in range(1,C-1):
@@ -37,7 +39,7 @@ for i in range(T):
             queue = [(x,y)]
             lake = set()
             lake.add((x,y))
-            fronter = float('inf')
+            fronter = maxim
             while queue:
                 aux = []
                 for (j,k) in queue:
