@@ -50,6 +50,7 @@ for i in range(T):
                         arr[j][k] = fronter
                 
     print('Case #{}: {}'.format(i+1,ans))
+<<<<<<< HEAD:2016/Round A/2 Rain.py
 
 # 1
 # 10 10
@@ -63,3 +64,5 @@ for i in range(T):
 # 5 3 2 6 1 1 1 7 2 2
 # 1 7 2 5 4 3 1 7 3 1
 # 2 2 3 6 7 7 3 5 2 6
+=======
+>>>>>>> 072540d6c81969dc027bbbb69ef904577eef510f:2016/Round A/2 Rain [TLE for 2TS].py
