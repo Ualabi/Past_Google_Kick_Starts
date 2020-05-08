@@ -1,3 +1,4 @@
+# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0c/0000000000201d32
 def exp(x,A,B,K):
     if K == 1:
         return 0, 0
