@@ -24,7 +24,7 @@ for _ in range(T):
     a, b = {}, {}
     count = 0
     for x in range(1,min(N+1,K+1)):
-        cnt = ((N-x)//K + 1) % l;
+        cnt = ((N-x)//K + 1) % l
         i,j = exp(x,A,B,K)
         a[i] = a.get(i,0)+cnt
         b[j] = b.get(j,0)+cnt
