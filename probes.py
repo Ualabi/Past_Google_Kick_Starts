@@ -1,35 +1,52 @@
-def exp(x,A,K):
-    ans = 1
-    for i in range(A):
-        ans = (ans*x)%K
-        if ans == 0:
-            return 0
-    return ans
-
-def solve(A,B,N,K):
-    l = 1000000007
-    a, b = {}, {}
-    for x in range(1,N+1):
-        i = exp(x,A,K)
-        a[i] = a.get(i,0)+1
-        
-        j = exp(x,B,K)
-        if i == 0:
-            if j != 0:
-                b[j] = b.get(j,0)+1
-        elif j != K-i:
-            b[j] = b.get(j,0)+1
-    print(a)
-    print(b)
-    suma = 0
-    for x in b:
-        if K-x in a:
-            suma = (suma + b[x]*a[K-x])%l
-    return suma
+# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201dbb
+ax = [-1,1,0,0]
+ay = [0,0,-1,1]
+maxim = float('inf')
 
 T = int(input())
 for i in range(T):
-    A, B, N, K = map(int,input().split())
-    ans = solve(A,B,N,K)
-    print('Case #{}: {}'.format(i+1,ans))
+    ans = 0
+    R, C = map(int,input().split())
+    arr = []
+    for ii in range(R):
+        arr.append(list(map(int,input().split())))
     
+    if R <= 2 or C <= 2:
+        print('Case #{}: {}'.format(i+1,0))
+        continue
+    
+    checked = set()
+    for x in range(1,R-1):
+        for y in range(1,C-1):
+            if (x,y) not in checked:
+                checked.add((x,y))
+                flag = True
+                limit = arr[x][y]
+                queue = [(x,y)]
+                lake = set()
+                lake.add((x,y))
+                fronter = maxim
+                while queue:
+                    aux = []
+                    for (j,k) in queue:
+                        for r in range(4):
+                            a = j+ax[r]
+                            b = k+ay[r]
+                            if (a,b) not in lake and arr[a][b] <= limit:
+                                if x == 0 or y == 0 or x == R-1 or y == C-1:
+                                    flag = False
+                                else:
+                                    if arr[a][b] == limit:
+                                        checked.add((a,b))
+                                    lake.add((a,b))
+                                    aux.append((a,b))
+                            elif arr[a][b] > limit:
+                                fronter = min(fronter,arr[a][b])
+                    queue = aux
+                    
+                if flag:
+                    for (j,k) in lake:
+                        ans += fronter - arr[j][k]
+                        arr[j][k] = fronter
+                
+    print('Case #{}: {}'.format(i+1,ans))

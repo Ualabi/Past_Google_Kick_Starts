@@ -34,7 +34,7 @@ for i in range(T):
                             a = j+ax[r]
                             b = k+ay[r]
                             if (a,b) not in lake and arr[a][b] <= limit:
-                                if x == 0 or y == 0 or x == R-1 or y == C-1:
+                                if a == 0 or b == 0 or a == R-1 or b == C-1:
                                     flag = False
                                 else:
                                     if arr[a][b] == limit:
