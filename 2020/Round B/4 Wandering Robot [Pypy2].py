@@ -11,7 +11,7 @@ for i in range(T):
     W, H, L, U, R, D = map(int,raw_input().split())
     
     if (L == 1 and U == 1) or (D-U+1 == H) or (R-L+1 == W):
-        print('Case #'+str(i+1)+': 0.0')
+        print 'Case #{}: 0.0'.format(i+1)
         continue
     
     count = 0
@@ -29,4 +29,4 @@ for i in range(T):
             r += 1
             h -= 1
     
-    print('Case #'+str(i+1)+': '+str(count))
+    print 'Case #{}: {}'.format(i+1,count)
