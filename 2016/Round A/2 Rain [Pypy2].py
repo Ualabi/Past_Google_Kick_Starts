@@ -1,4 +1,5 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201dbb
+# Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 ax = [-1,1,0,0]
 ay = [0,0,-1,1]
@@ -7,10 +8,10 @@ maxim = float('inf')
 T = int(input())
 for i in range(T):
     ans = 0
-    R, C = map(int,input().split())
+    R, C = map(int,raw_input().split())
     arr = []
     for ii in range(R):
-        arr.append(list(map(int,input().split())))
+        arr.append(list(map(int,raw_input().split())))
     
     if R <= 2 or C <= 2:
         print('Case #{}: {}'.format(i+1,0))
@@ -50,4 +51,4 @@ for i in range(T):
                         ans += fronter - arr[j][k]
                         arr[j][k] = fronter
                 
-    print('Case #{}: {}'.format(i+1,ans))
+    print('Case #'+str(i+1)+': '+str(ans))

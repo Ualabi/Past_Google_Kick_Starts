@@ -1,5 +1,5 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0c/0000000000201d32
-# This algoritgm didnt pass the TLE for the second test set in python 3, but it did in c++, thats why I attached both solutions
+# Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 def exp(x,A,B,K):
     if K == 1:
@@ -23,11 +23,11 @@ def exp(x,A,B,K):
 l = 10**9 + 7
 T = int(input())
 for _ in range(T):
-    A, B, N, K = map(int,input().split())
+    A, B, N, K = map(int,raw_input().split())
     a, b = {}, {}
     count = 0
     for x in range(1,min(N+1,K+1)):
-        cnt = ((N-x)//K + 1) % l
+        cnt = ((N-x)/K + 1) % l;
         i,j = exp(x,A,B,K)
         a[i] = a.get(i,0)+cnt
         b[j] = b.get(j,0)+cnt
@@ -40,4 +40,4 @@ for _ in range(T):
         if y in b:
             suma += (a[x]%l * b[y]%l)%l
             suma %= l
-    print('Case #{}: {}'.format(_+1,(suma+l-count)%l))
+    print('Case #'+str(_+1)+': '+str((suma+l-count)%l))

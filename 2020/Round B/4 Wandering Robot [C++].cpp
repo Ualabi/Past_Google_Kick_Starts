@@ -1,5 +1,5 @@
 // https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc8/00000000002d8565
-// This algoritgm didnt pass the TLE for the second test set in python 3, but it did in c++, thats why I attached both solutions
+// This algoritgm didnt pass the TLE for the second test set in python 3
 
 #include <bits/stdc++.h>
 #include <stdio.h>

@@ -1,17 +1,17 @@
 # https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ffc8/00000000002d8565
-# This algoritgm didnt pass the TLE for the second test set in python 3, but it did in c++, thats why I attached both solutions
+# Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
-from numpy import log2 as log2
+from math import log
 logs = [0]
 for x in range(1,2*10**5):
-    logs.append(logs[x-1] + log2(x))
+    logs.append(logs[x-1] + log(x,2))
 
 T = int(input())
 for i in range(T):
-    W, H, L, U, R, D = map(int,input().split())
+    W, H, L, U, R, D = map(int,raw_input().split())
     
     if (L == 1 and U == 1) or (D-U+1 == H) or (R-L+1 == W):
-        print('Case #{}: 0.0'.format(i+1))
+        print('Case #'+str(i+1)+': 0.0')
         continue
     
     count = 0
@@ -28,5 +28,5 @@ for i in range(T):
             count += 2**(logs[r+h] - logs[r] - logs[h] - r - h)
             r += 1
             h -= 1
-
-    print('Case #{}: {}'.format(i+1,count))
+    
+    print('Case #'+str(i+1)+': '+str(count))
