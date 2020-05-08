@@ -22,22 +22,25 @@ def exp(x,A,B,K):
 
 l = 10**9 + 7
 T = int(input())
-for _ in range(T):
+for t in range(T):
     A, B, N, K = map(int,raw_input().split())
     a, b = {}, {}
+    
     count = 0
     for x in range(1,min(N+1,K+1)):
-        cnt = ((N-x)/K + 1) % l
+        cnt = ((N-x)/K + 1) % l;
         i,j = exp(x,A,B,K)
         a[i] = a.get(i,0)+cnt
         b[j] = b.get(j,0)+cnt
         if (i+j)%K == 0:
             count += cnt
             count %= l
+    
     suma = 0
     for x in a:
         y = (K-x)%K
         if y in b:
             suma += (a[x]%l * b[y]%l)%l
             suma %= l
-    print('Case #'+str(_+1)+': '+str((suma+l-count)%l))
+            
+    print 'Case #{}: {}'.format(t+1,(suma+l-count)%l)
