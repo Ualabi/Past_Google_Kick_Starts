@@ -1,4 +1,5 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201dbb
+
 ax = [-1,1,0,0]
 ay = [0,0,-1,1]
 maxim = float('inf')
