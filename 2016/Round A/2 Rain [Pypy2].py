@@ -14,7 +14,7 @@ for i in range(T):
         arr.append(list(map(int,raw_input().split())))
     
     if R <= 2 or C <= 2:
-        print('Case #{}: {}'.format(i+1,0))
+        print 'Case #{}: {}'.format(i+1,0)
         continue
     
     checked = set()
@@ -51,4 +51,4 @@ for i in range(T):
                         ans += fronter - arr[j][k]
                         arr[j][k] = fronter
                 
-    print('Case #'+str(i+1)+': '+str(ans))
+    print 'Case #{}: {}'.format(i+1,ans)
