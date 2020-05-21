@@ -1,4 +1,5 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/00000000003381cb
+# Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 squares = []
 for x in range(1,int((100*100000)**0.5)+1):
