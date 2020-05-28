@@ -1,3 +1,6 @@
+# Link: https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/0000000000337b4d
+# Use PyPy2 to run it, it does not pass the TLE with Python 3/2
+
 class SegmentTree():
     def build(self,arr,N):
         deep, lvl = 1, 1
@@ -25,9 +28,6 @@ class SegmentTree():
                 s.append(suma)
                 sub += 1
             self.values.append(s)
-        for x in self.values[1:]:
-            print(x)
-        print()
         return None
     
     def update(self,index,nval):
@@ -36,16 +36,10 @@ class SegmentTree():
         for x in range(self.deep):
             self.values[x+1][index] += change
             index = index//2
-        for x in self.values[1:]:
-            print(x)
-        print()
         return None
     
     def query(self,l,r,lvl=None):
         if lvl == None:
-            for x in self.values[1:]:
-                print(x)
-            print()
             lvl = self.deep
         if l==r or lvl == 0:
             return 0
@@ -64,8 +58,8 @@ class SegmentTree():
 
 T = int(input())
 for t in range(T):
-    N, Q = map(int,input().split())
-    A = list(map(int,input().split()))
+    N, Q = map(int,raw_input().split())
+    A = list(map(int,raw_input().split()))
     
     at = [0]
     for n in range(1,N+1):
@@ -83,24 +77,14 @@ for t in range(T):
     
     ans = 0
     for q in range(Q):
-        a, b, c = input().split()
+        a, b, c = raw_input().split()
         if a == 'Q':
             l, r = int(b), int(c)
             s = 1 if l%2 else -1
-            ans += s*(sam.query(l,r)-(l-1)*sat.query(l,r))
+            ans += s*(sam.query(l,r+1)-(l-1)*sat.query(l,r+1))
         else: #a == 'U'
             i, v = int(b), int(c)
             s = 1 if i%2 else -1
             sat.update(i,s*v)
             sam.update(i,s*v*i)
     print('Case #{}: {}'.format(t+1,ans))
-
-'''
-1
-5 4
-1 3 9 8 2
-Q 2 4
-Q 5 5
-U 2 10
-Q 1 2
-'''
