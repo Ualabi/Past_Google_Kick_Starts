@@ -1,11 +1,14 @@
+# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0a/0000000000201ca4
+
 from copy import deepcopy as dc
 
 def dfs(m,suma,mapa,R,C,Rs,Cs,p,q,S,s):
     if 0 <= Rs and Rs < R and 0 <= Cs and Cs < C:
+        if mapa[Rs][Cs][1] > S:
+            return m
         val = p[mapa[Rs][Cs][1]] if mapa[Rs][Cs][0] else q[mapa[Rs][Cs][1]]
         mapa[Rs][Cs][1] += 1
         suma += val
-        # print(s,Rs,Cs,suma)
         if s == S:
             return max(m,suma)
         else:
@@ -38,7 +41,7 @@ for t in range(T):
     
     pp, qq = 0, 0
     p, q = [], []
-    for x in range(S):
+    for x in range(S+1):
         p.append((1-pp)*P)
         q.append((1-qq)*Q)
         pp += p[-1]
@@ -50,25 +53,3 @@ for t in range(T):
     r = dfs(l,0,dc(mapa),R,C,Rs,Cs+1,p,q,S,1)
 
     print('Case #{}: {}'.format(t+1,r))
-
-'''
-2
-4 4 0 0 5
-0.8000 0.2000
-. . . .
-. . . .
-. . A .
-. A . A
-10 10 9 1 4
-0.6121 0.1000
-. . A A . . . . . .
-A . . . . . . . . .
-. . A . . . . A . .
-. . . A A . . . . .
-. A A A . . . . . A
-A . A A . . . . A .
-. A . . . . . A . .
-. . . . A A . . . .
-. . A . . . A . . A
-. . . . A . . A . .
-'''
