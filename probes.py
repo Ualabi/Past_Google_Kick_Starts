@@ -1,74 +1,25 @@
-from copy import deepcopy as dc
+lim = 11
+dp = [[0 for _ in range(lim)] for __ in range(lim)]
+for c in range(lim):
+    dp[0][c] = 1
 
-def dfs(m,suma,mapa,R,C,Rs,Cs,p,q,S,s):
-    if 0 <= Rs and Rs < R and 0 <= Cs and Cs < C:
-        val = p[mapa[Rs][Cs][1]] if mapa[Rs][Cs][0] else q[mapa[Rs][Cs][1]]
-        mapa[Rs][Cs][1] += 1
-        suma += val
-        # print(s,Rs,Cs,suma)
-        if s == S:
-            return max(m,suma)
-        else:
-            if m >= suma + (S-s)*p[0]:
-                return m
-            else:
-                u = dfs(m,suma,dc(mapa),R,C,Rs-1,Cs,p,q,S,s+1)
-                d = dfs(u,suma,dc(mapa),R,C,Rs+1,Cs,p,q,S,s+1)
-                l = dfs(d,suma,dc(mapa),R,C,Rs,Cs-1,p,q,S,s+1)
-                r = dfs(l,suma,dc(mapa),R,C,Rs,Cs+1,p,q,S,s+1)
-                return r
-    else:
-        return m
+for c in range(1,lim):
+    for r in range(1,c):
+        dp[r][c] = dp[r][c-1] * (c/(r+c)) + dp[r-1][c] * (r/(r+c))
+
+for x in dp:
+    for y in x:
+        print(round(y,6),end=',')
+    print()
 
 T = int(input())
 for t in range(T):
-    R, C, Rs, Cs, S = map(int,input().split())
-    P, Q = map(float,input().split())
+    N, M = map(int,input().split())
+    if M == 0:
+        print('Case #{}: 1.000000000'.format(t+1))
+        continue
+    elif N == 2:
+        print('Case #{}: 0.333333333'.format(t+1))
+        continue
     
-    mapa = []
-    for x in range(R):
-        aux = input().split()
-        m = []
-        for y in aux:
-            if y == 'A':
-                m.append([True,0])
-            else:
-                m.append([False,0])
-        mapa.append(m)
-    
-    pp, qq = 0, 0
-    p, q = [], []
-    for x in range(S):
-        p.append((1-pp)*P)
-        q.append((1-qq)*Q)
-        pp += p[-1]
-        qq += q[-1]
-
-    u = dfs(0,0,dc(mapa),R,C,Rs-1,Cs,p,q,S,1)
-    d = dfs(u,0,dc(mapa),R,C,Rs+1,Cs,p,q,S,1)
-    l = dfs(d,0,dc(mapa),R,C,Rs,Cs-1,p,q,S,1)
-    r = dfs(l,0,dc(mapa),R,C,Rs,Cs+1,p,q,S,1)
-
-    print('Case #{}: {}'.format(t+1,r))
-
-'''
-2
-4 4 0 0 5
-0.8000 0.2000
-. . . .
-. . . .
-. . A .
-. A . A
-10 10 9 1 4
-0.6121 0.1000
-. . A A . . . . . .
-A . . . . . . . . .
-. . A . . . . A . .
-. . . A A . . . . .
-. A A A . . . . . A
-A . A A . . . . A .
-. A . . . . . A . .
-. . . . A A . . . .
-. . A . . . A . . A
-. . . . A . . A . .
-'''
+    print('Case #{}: {}'.format(t+1,dp[M][N]))
