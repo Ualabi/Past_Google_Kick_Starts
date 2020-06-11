@@ -1,6 +1,6 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201b77/0000000000201bfd
 # Even though I coded it as efficient as I can with O(N) <= bigO <= O(N^2)
-# It does not pass the time complexity with PyPy2, as they put 20 seconds per test set
+# It does not pass the TLE with PyPy2 for the second test set, as they put 20 seconds per test set
 # In this program is mandatory to use C++
 
 inf = float('inf')

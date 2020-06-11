@@ -1,5 +1,7 @@
 # Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201ca3
-# Does not pass the TLE for the second Test Set
+# It works, but it does not pass the TLE with PyPy2 for the second test set
+# The complexity of this program is a dfs with bigO <= 11^12
+# In this program is mandatory to use C++
 
 class Solution():
     def __init__(self,A):
