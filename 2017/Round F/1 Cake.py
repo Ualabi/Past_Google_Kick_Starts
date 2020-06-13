@@ -1,3 +1,8 @@
+# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201d29/0000000000201d2a
+
+import sys 
+sys.setrecursionlimit(10**6) 
+
 dp = {0:0}
 def solve(N):
     if N in dp:
