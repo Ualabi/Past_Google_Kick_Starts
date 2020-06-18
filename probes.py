@@ -1,12 +1,25 @@
-dp = {0:0}
-def solve(N):
-    if N in dp:
-        return dp[N]
-    dp[N] = float('inf')
-    for i in range(1,int(N**.5)+1):
-        dp[N] = min(dp[N], solve(N - i*i) + 1)
-    return dp[N]
+def solve(F):
+    end = F
+    F = F-F%10
+    start = F
+    ans = 0
+    m = 1
+    while F:
+        y = F%10
+        ans += y*m
+        m *= 9
+        F = F//10
+        
+    ans = 8 * ans//9
+    for i in range(start,end+1):
+        if "9" not in str(i) and i%9!=0:
+            ans += 1
+    return ans
 
 T = int(input())
 for t in range(T):
-    print('Case #{}: {}'.format(t+1,solve(int(input()))))
+    F, L = map(int,input().split())
+    a = solve(L)
+    b = solve(F)
+    ans = a - b + 1
+    print('Case #{}: {}'.format(t+1,ans))
