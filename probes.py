@@ -26,20 +26,27 @@ class RaspBerry():
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(False)
 
+    def setPWM(self,a,b):
+        x = 0
+        y = 0
+
         GPIO.setup(18, GPIO.OUT)
         GPIO.setup(12, GPIO.OUT)
 
         lente = GPIO.PWM(18, 100) #6, 20
         keyst = GPIO.PWM(12, 100) #7, 21
 
-        lente.start(13)
-        keyst.start(14)
+        lente.start(x)
+        keyst.start(y)
 
-        while True:
-            a,b = map(float,input().split())
-            lente.ChangeDutyCycle(a)
-            keyst.ChangeDutyCycle(b)
+        lente.ChangeDutyCycle(x)
+        keyst.ChangeDutyCycle(y)
 
+        GPIO.setup(18, GPIO.IN)
+        GPIO.setup(12, GPIO.OUT)
+        return None
+    
+    def swapHDMI(self):
         return None
 
 class Camaras():
