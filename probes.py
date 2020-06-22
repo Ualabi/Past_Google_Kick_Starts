@@ -1,7 +1,46 @@
 import os
 import cv2
+import serial
 import numpy as np
+import RPi.GPIO as GPIO
 import matplotlib.pyplot as plt
+
+class Arduino():
+    def __init__(self):
+        ser = serial.Serial('/dev/ttyACM0')  # open serial port
+        print(ser.name)         # check which port was really used
+        for x in range(10):
+            aux = ''
+            p = ser.read().decode()
+            while p != '\n':
+                aux += p
+                p = ser.read().decode()
+            print(aux)
+            
+        ser.close()  
+
+        return None
+
+class RaspBerry():
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+
+        GPIO.setup(18, GPIO.OUT)
+        GPIO.setup(12, GPIO.OUT)
+
+        lente = GPIO.PWM(18, 100) #6, 20
+        keyst = GPIO.PWM(12, 100) #7, 21
+
+        lente.start(13)
+        keyst.start(14)
+
+        while True:
+            a,b = map(float,input().split())
+            lente.ChangeDutyCycle(a)
+            keyst.ChangeDutyCycle(b)
+
+        return None
 
 class Camaras():
     def __init__(self):
@@ -100,6 +139,54 @@ def binFondos(img,b):
         
     return xl, yl, xr, yr
 
+def binFondo(img,b):
+    R = len(img)
+    C = len(img[0])
+    
+    out = [[False for c in range(C)] for r in range(R)]
+    for r in range(R):
+        for c in range(C):
+            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
+                out[r][c] = True
+    
+    maxim= 0
+    grid = []
+    for r in range(R):
+        for c in range(C):
+            if out[r][c]:
+                out[r][c] = False
+                count = 1 
+                queue = [(r,c)]
+                island = [(r,c)]
+                while queue:
+                    follow = []
+                    for (i,j) in queue:
+                        for (ii,jj) in [(-1,0),(1,0),(0,-1),(0,1)]:
+                            m = i + ii
+                            n = j + jj
+                            if 0 <= m and m < R and 0 <= n and n < C:
+                                if out[m][n] == True:
+                                    count += 1
+                                    out[m][n] = False
+                                    follow.append((m,n))
+                                    island.append((m,n))
+                    queue = follow
+                if maxim < count:
+                    maxim= count
+                    grid = island
+
+    fx = [0 for c in range(C)]
+    fy = [0 for r in range(R)]
+    for (r,c) in grid:
+        fx[c] += 1
+        fy[r] += 1
+    x = [(c+1)*fx[c] for c in range(C)]
+    y = [(r+1)*fy[r] for r in range(R)]
+    cx = int(round(sum(x)/sum(fx),0)) # Center X 1st biggest
+    cy = int(round(sum(y)/sum(fy),0)) # Center Y 1st biggest
+        
+    return cx, cy
+
 def getFondos(img,b,xl,yl,xr,yr):
     R = len(img)
     C = len(img[0])
@@ -129,6 +216,24 @@ def getFondos(img,b,xl,yl,xr,yr):
     nyr = int(round(sum(y2)/sum(fy2),0)) #Center right Y
 
     return nxl, nyl, nxr, nyr
+
+def getFondo(img,b,c,x,y):
+    R = len(img)
+    C = len(img[0])
+
+    fx = [0 for c in range(C)]
+    fy = [0 for r in range(R)]
+    for r in range(10*y-50,10*y+50):
+        for c in range(10*x-50,10*x+50):
+            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
+                fx[c] += 1
+                fy[r] += 1    
+    x = [(c+1)*fx[c] for c in range(C)]
+    y = [(r+1)*fy[r] for r in range(R)]
+    nx = int(round(sum(x)/sum(fx),0)) #Center left X
+    ny = int(round(sum(y)/sum(fy),0)) #Center left Y
+    
+    return nx, ny
 
 def Coordenadas(lx,ly,rx,ry):
     print('[',lx,ly,'] - [',rx,ry,']')
@@ -187,14 +292,24 @@ nrxl,nryl,nrxr,nryr = getFondos(imgR,70,rxl,ryl,rxr,ryr)
 print(nlxl,nlyl,nlxr,nlyr)
 print(nrxl,nryl,nrxr,nryr)
 
-(xl,yl,zl) = Coordenadas(nlxl,nlyl,nrxl,nryl) # Circulo izquierdo
-(xr,yr,zr) = Coordenadas(nlxr,nlyr,nrxr,nryr) # Circulo derecho
+xl,yl,zl = Coordenadas(nlxl,nlyl,nrxl,nryl) # Circulo izquierdo
+xr,yr,zr = Coordenadas(nlxr,nlyr,nrxr,nryr) # Circulo derecho
 print(xl,yl,zl)
 print(xr,yr,zr)
 
 theta = 0
 delta = Angulo(xl,yl,zl,xr,yr,zr,theta)
 print(delta)
+
+imgL, imgR, imgl, imgr = cams.Fotos()
+lxc, lyc = binFondos(imgl,70)
+rxc, ryc = binFondos(imgr,70)
+
+nlxc, nlyc = getFondo(imgL,70,lxc,lyc)
+nrxc, nryc = getFondo(imgR,70,rxc,ryc)
+
+xc,yc,zc = Coordenadas(nlxc,nlyc,nrxc,nryc) # Circulo central
+print(xc,yc,zc)
 
 #plt.subplot(121)
 #plt.imshow(imgL)
