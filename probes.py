@@ -1,325 +1,85 @@
-import os
-import cv2
-import serial
-import numpy as np
-import RPi.GPIO as GPIO
-import matplotlib.pyplot as plt
+class TreeNode():
+    def __init__(self,val,left=None,right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-class Arduino():
+class BST():
     def __init__(self):
-        ser = serial.Serial('/dev/ttyACM0')  # open serial port
-        print(ser.name)         # check which port was really used
-        for x in range(10):
-            aux = ''
-            p = ser.read().decode()
-            while p != '\n':
-                aux += p
-                p = ser.read().decode()
-            print(aux)
-            
-        ser.close()  
-
-        return None
-
-class RaspBerry():
-    def __init__(self):
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
-
-    def setPWM(self,a,b):
-        x = 0
-        y = 0
-
-        GPIO.setup(18, GPIO.OUT)
-        GPIO.setup(12, GPIO.OUT)
-
-        lente = GPIO.PWM(18, 100) #6, 20
-        keyst = GPIO.PWM(12, 100) #7, 21
-
-        lente.start(x)
-        keyst.start(y)
-
-        lente.ChangeDutyCycle(x)
-        keyst.ChangeDutyCycle(y)
-
-        GPIO.setup(18, GPIO.IN)
-        GPIO.setup(12, GPIO.OUT)
-        return None
-    
-    def swapHDMI(self):
-        return None
-
-class Camaras():
-    def __init__(self):
-        # Camara izquierda
-        self.cap1 = cv2.VideoCapture(0)
-        self.cap1.set(3, 1280)
-        self.cap1.set(4, 960)
-        self.cap1.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
-
-        # Camara derecha
-        self.cap2 = cv2.VideoCapture(2)
-        self.cap2.set(3, 1280)
-        self.cap2.set(4, 960)
-        self.cap2.set(cv2.CAP_PROP_FOURCC,cv2.VideoWriter_fourcc('M','J','P','G'))
-    
-    def Fotos(self):
-        ret1, frameL = self.cap1.read()
-        self.cap1.release()
-
-        ret2, frameR = self.cap2.read()
-        frameR = cv2.rotate(frameR, cv2.ROTATE_180)
-        self.cap2.release()
-
-        sclp = 0.1
-        wth = int(1280* sclp)
-        hht = int(960 * sclp)
-
-        framel = cv2.resize(frameL, (wth, hht))
-        framer = cv2.resize(frameR, (wth, hht))
-
-        return frameL, frameR, framel, framer
-
-def binFondos(img,b):
-    R = len(img)
-    C = len(img[0])
-    
-    out = [[False for c in range(C)] for r in range(R)]
-    for r in range(R):
-        for c in range(C):
-            if 3*img[r][c][0] >= sum(img[r][c]) + 2*b:
-                out[r][c] = True
-    
-    maxim1, maxim2 = 0, 0
-    grid1, grid2 = [], []
-    for r in range(R):
-        for c in range(C):
-            if out[r][c]:
-                out[r][c] = False
-                count = 1 
-                queue = [(r,c)]
-                island = [(r,c)]
-                while queue:
-                    follow = []
-                    for (i,j) in queue:
-                        for (ii,jj) in [(-1,0),(1,0),(0,-1),(0,1)]:
-                            m = i + ii
-                            n = j + jj
-                            if 0 <= m and m < R and 0 <= n and n < C:
-                                if out[m][n] == True:
-                                    count += 1
-                                    out[m][n] = False
-                                    follow.append((m,n))
-                                    island.append((m,n))
-                    queue = follow
-                if maxim1 < count:
-                    maxim1, maxim2 = count, maxim1
-                    grid1, grid2 = island, grid1
-                elif maxim2 < count:
-                    maxim2 = count
-                    grid2 = island
-
-    fx1 = [0 for c in range(C)]
-    fy1 = [0 for r in range(R)]
-    for (r,c) in grid1:
-        fx1[c] += 1
-        fy1[r] += 1
-    x1 = [(c+1)*fx1[c] for c in range(C)]
-    y1 = [(r+1)*fy1[r] for r in range(R)]
-    cx1 = int(round(sum(x1)/sum(fx1),0)) # Center X 1st biggest
-    cy1 = int(round(sum(y1)/sum(fy1),0)) # Center Y 1st biggest
-
-    fx2 = [0 for c in range(C)]
-    fy2 = [0 for r in range(R)]
-    for (r,c) in grid2:
-        fx2[c] += 1
-        fy2[r] += 1
-    x2 = [(c+1)*fx2[c] for c in range(C)]
-    y2 = [(r+1)*fy2[r] for r in range(R)]
-    cx2 = int(round(sum(x2)/sum(fx2),0)) # Center X 2nd biggest
-    cy2 = int(round(sum(y2)/sum(fy2),0)) # Center Y 2nd biggest
-
-    if cx1 <= cx2: # Circulo izquierdo - Circulo derecho
-        xl,yl,xr,yr = cx1,cy1,cx2,cy2
+        self.head = None
+        
+def putIn(val,Tree):
+    if Tree.head == None:
+        Tree.head = TreeNode(val,BST(),BST())
+    elif Tree.head.val < val:
+        putIn(val,Tree.head.right)
     else:
-        xl,yl,xr,yr = cx2,cy2,cx1,cy1
-        
-    return xl, yl, xr, yr
+        putIn(val,Tree.head.left)
 
-def binFondo(img,b):
-    R = len(img)
-    C = len(img[0])
+def putOut(val,Tree):
+    if Tree.head == None:
+        return None
+    elif Tree.head.val == val:
+        if Tree.head.left.head:
+            rightTree = Tree.head.right
+            Tree.head = Tree.head.left.head
+            if rightTree.head:
+                insertTree(Tree,rightTree)
+        elif Tree.head.right.head:
+            Tree.head = Tree.head.right.head
+        else:
+            Tree.head = None
+    elif Tree.head.val < val:
+        aux = putOut(val,Tree.head.right)
+    else:
+        aux = putOut(val,Tree.head.left)
+
+def insertTree(Tree,auxTree):
+    if Tree.head == None:
+        Tree.head = auxTree.head
+    elif Tree.head.val < auxTree.head.val:
+        insertTree(Tree.head.right,auxTree)
+    else:
+        insertTree(Tree.head.left,auxTree)
+
+def getMin(Tree):
+    if Tree.head:
+        if Tree.head.left.head:
+            return getMin(Tree.head.left)
+        else:
+            return Tree.head.val
+    else:
+        return None
     
-    out = [[False for c in range(C)] for r in range(R)]
-    for r in range(R):
-        for c in range(C):
-            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
-                out[r][c] = True
+def getMax(Tree):
+    if Tree.head:
+        if Tree.head.right.head:
+            return getMax(Tree.head.right)
+        else:
+            return Tree.head.val
+    else:
+        return None
     
-    maxim= 0
-    grid = []
-    for r in range(R):
-        for c in range(C):
-            if out[r][c]:
-                out[r][c] = False
-                count = 1 
-                queue = [(r,c)]
-                island = [(r,c)]
-                while queue:
-                    follow = []
-                    for (i,j) in queue:
-                        for (ii,jj) in [(-1,0),(1,0),(0,-1),(0,1)]:
-                            m = i + ii
-                            n = j + jj
-                            if 0 <= m and m < R and 0 <= n and n < C:
-                                if out[m][n] == True:
-                                    count += 1
-                                    out[m][n] = False
-                                    follow.append((m,n))
-                                    island.append((m,n))
-                    queue = follow
-                if maxim < count:
-                    maxim= count
-                    grid = island
+def getDif(self,Tree):
+    maxim = getMax(Tree)
+    minim = getMin(Tree)
+    if maxim != None and minim != None:
+        return maxim - minim
+    else:
+        return None
 
-    fx = [0 for c in range(C)]
-    fy = [0 for r in range(R)]
-    for (r,c) in grid:
-        fx[c] += 1
-        fy[r] += 1
-    x = [(c+1)*fx[c] for c in range(C)]
-    y = [(r+1)*fy[r] for r in range(R)]
-    cx = int(round(sum(x)/sum(fx),0)) # Center X 1st biggest
-    cy = int(round(sum(y)/sum(fy),0)) # Center Y 1st biggest
-        
-    return cx, cy
+aux = BST()
 
-def getFondos(img,b,xl,yl,xr,yr):
-    R = len(img)
-    C = len(img[0])
+putIn(5,aux)
+putIn(10,aux)
+putIn(12,aux)
+putIn(1,aux)
+putIn(4,aux)
+putIn(5,aux)
+putIn(7,aux)
+putOut(5,aux)
+putIn(-1,aux)
 
-    fx1 = [0 for c in range(C)]
-    fy1 = [0 for r in range(R)]
-    for r in range(10*yl-50,10*yl+50):
-        for c in range(10*xl-50,10*xl+50):
-            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
-                fx1[c] += 1
-                fy1[r] += 1    
-    x1 = [(c+1)*fx1[c] for c in range(C)]
-    y1 = [(r+1)*fy1[r] for r in range(R)]
-    nxl = int(round(sum(x1)/sum(fx1),0)) #Center left X
-    nyl = int(round(sum(y1)/sum(fy1),0)) #Center left Y
-
-    fx2 = [0 for c in range(C)]
-    fy2 = [0 for r in range(R)]
-    for r in range(10*yr-50,10*yr+50):
-        for c in range(10*xr-50,10*xr+50):
-            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
-                fx2[c] += 1
-                fy2[r] += 1
-    x2 = [(c+1)*fx2[c] for c in range(C)]
-    y2 = [(r+1)*fy2[r] for r in range(R)]
-    nxr = int(round(sum(x2)/sum(fx2),0)) #Center right X
-    nyr = int(round(sum(y2)/sum(fy2),0)) #Center right Y
-
-    return nxl, nyl, nxr, nyr
-
-def getFondo(img,b,c,x,y):
-    R = len(img)
-    C = len(img[0])
-
-    fx = [0 for c in range(C)]
-    fy = [0 for r in range(R)]
-    for r in range(10*y-50,10*y+50):
-        for c in range(10*x-50,10*x+50):
-            if 3*img[r][c][2] >= sum(img[r][c]) + 2*b:
-                fx[c] += 1
-                fy[r] += 1    
-    x = [(c+1)*fx[c] for c in range(C)]
-    y = [(r+1)*fy[r] for r in range(R)]
-    nx = int(round(sum(x)/sum(fx),0)) #Center left X
-    ny = int(round(sum(y)/sum(fy),0)) #Center left Y
-    
-    return nx, ny
-
-def Coordenadas(lx,ly,rx,ry):
-    print('[',lx,ly,'] - [',rx,ry,']')
-    #   [x1,y1]   Camaras   [x2,y2]
-    #   Izquierda           Derecha
-    
-    b = 8.04            # Distancia focal
-    f = 1455            # [ { 1280/(2 * tan(47.5/2)) } + { 960/(2 * tan(36.5/2)) } ] / 2
-    tl = 0.4400105309   # tan(47.5/2)
-    th = 0.3297505471   # tan(36.5/2)
-
-    dx = lx - rx
-    d = b*f/dx
-    print(d)
-    er = 1.976-0.11826*d+0.00165*d*d
-    zf = d+er
-
-    l = 2*tl*zf
-    nx1 = l*(lx-640)/1280
-    nx2 = l*(rx-640)/1280
-    xf = (nx1+nx2)/2
-
-    h = 2*th*zf
-    ny1 = h*(480-ly)/960
-    ny2 = h*(480-ry)/960
-    yf = (ny1+ny2)/2
-    
-    return (xf,yf,zf)
-
-def Angulo(xl,yl,zl,xr,yr,zr,theta):
-    al = theta + np.arctan(yl/zl)
-    ar = theta + np.arctan(yr/zr)
-    
-    cl = np.cos(al)
-    cr = np.cos(ar)
-    
-    dl = ( (zl*zl + yl*yl)**0.5 ) * cl
-    dr = ( (zr*zr + yr*yr)**0.5 ) * cr
-    
-    print(dl, dr)
-    
-    delta = np.arctan((dr-dl)/(xr-xl))
-    
-    return np.rad2deg(delta)
-
-cams = Camaras()
-imgL, imgR, imgl, imgr = cams.Fotos()
-
-lxl,lyl,lxr,lyr = binFondos(imgl,70)
-rxl,ryl,rxr,ryr = binFondos(imgr,70)
-print(lxl,lyl,lxr,lyr)
-print(rxl,ryl,rxr,ryr)
-
-nlxl,nlyl,nlxr,nlyr = getFondos(imgL,70,lxl,lyl,lxr,lyr)
-nrxl,nryl,nrxr,nryr = getFondos(imgR,70,rxl,ryl,rxr,ryr)
-print(nlxl,nlyl,nlxr,nlyr)
-print(nrxl,nryl,nrxr,nryr)
-
-xl,yl,zl = Coordenadas(nlxl,nlyl,nrxl,nryl) # Circulo izquierdo
-xr,yr,zr = Coordenadas(nlxr,nlyr,nrxr,nryr) # Circulo derecho
-print(xl,yl,zl)
-print(xr,yr,zr)
-
-theta = 0
-delta = Angulo(xl,yl,zl,xr,yr,zr,theta)
-print(delta)
-
-imgL, imgR, imgl, imgr = cams.Fotos()
-lxc, lyc = binFondos(imgl,70)
-rxc, ryc = binFondos(imgr,70)
-
-nlxc, nlyc = getFondo(imgL,70,lxc,lyc)
-nrxc, nryc = getFondo(imgR,70,rxc,ryc)
-
-xc,yc,zc = Coordenadas(nlxc,nlyc,nrxc,nryc) # Circulo central
-print(xc,yc,zc)
-
-#plt.subplot(121)
-#plt.imshow(imgL)
-#plt.subplot(122)
-#plt.imshow(imgR)
-#plt.show()
+print(aux.head.val)
+print(aux.head.left.head.val)
+print(aux.head.right.head.val)
