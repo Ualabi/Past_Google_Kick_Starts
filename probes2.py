@@ -1,91 +1,90 @@
-T = int(input())
-for t in range(T):
-    N, A, B = map(int,input().split())
-    arr = list(map(int,input().split()))
+import sys 
+from random import randint
+sys.setrecursionlimit(100000000) 
+
+class Solution():
+    def __init__(self, N, I, fathers):
+        self.N = N
+        self.I = I
+        self.sons = [[] for x in range(self.N)]
+        for i in range(N-1):
+            self.sons[fathers[i]-1].append(i+1)
+        self.bigsons = [[[] for _ in range(2)] for __ in range(self.N)]
+        self.visits = [[1 for _ in range(2)] for __ in range(self.N)]
+        self.visited = []
+        self.height = 0
+        self.dfs(0,0)
+    
+    def dfs(self,ind,height):
+        print(height)
+        self.visited.append(ind)
+        self.dfs(ind+1,height+1)
+        self.visited.pop()
+
+    def solve(self):
+        ans = 0
+        for i in range(self.N-1,-1,-1):
+            for j in range(2):
+                for k in self.bigsons[i][j]:
+                    self.visits[i][j] += self.visits[k][j]
+            va = self.visits[i][0]/self.N
+            vb = self.visits[i][1]/self.N
+            ans += va + vb - va*vb
+        return ans
+
+def fun1(N,A,B,arr):
+    I = [A,B]
+    sol = Solution(N,I,arr)
+    return round(sol.solve(),6)
+
+def fun2(N,A,B,arr):
     A = [A,B]
-    
-    sons = [[] for x in range(N)]
-    for i in range(N-1):
-        sons[arr[i]-1].append(i+1)
-    
-    par = [[[] for _ in range(20)] for __ in range(N)]
+    par = [[0 for _ in range(20)] for __ in range(N)]
     depth = [0 for _ in range(N)]
-    for i in range(N-1):
-        depth[i+1] = depth[arr[i]-1]+1
-        par[i][0] = sons[i]
-    
-    for i in range(N-1,-1,-1):
-        j = 0
-        while 0 < len(par[i][j]):
-            for k in par[i][j]:
-                par[i][j+1] += par[k][j]
-            j += 1
-
-    # for i in range(2):
-    #     B = A[i]
-    #     l = 0
-    #     while B: #O(log B)
-    #         if 0 < B&(2**l):
-    #             B >>= (l+1)
-    #             print(l)
-    #             l = 0
-    #         else: 
-    #             l += 1
-
-    sons = [[None for _ in range(N) ] for __ in range(2)]
-    for i in range(2):
-        for j in range(N):
-            curr, new = [j], []
-            B = A[i]
-            l = 0
-            while B: #O(log B)
-                if 0 < B&(2**l):
-                    B -= B&(2**l)
-                    for k in curr:
-                        new += par[k][l]
-                    curr = new
-                    new = []
-                else: 
-                    l += 1
-            sons[i][j] = curr
-            
-    for x in sons:
-        print(x)
-    print()
-
+    for i in range(1,N):
+        par[i][0] = arr[i-1]-1
+        depth[i] = depth[par[i][0]]+1
+        z = 0
+        while 0 < par[i][z]:
+            par[i][z+1] = par[par[i][z]][z]
+            z += 1
     ans = 0
-    visits = [[1 for _ in range(N)] for __ in range(2)]
+    cnt = [[0 for _ in range(2)] for __ in range(N)]
     for i in range(N-1,-1,-1):
-        for j in range(2):
-            for x in sons[j][i]:
-                visits[j][i] += visits[j][x]
-        va = visits[0][i]/N
-        vb = visits[1][i]/N
+        for z in range(2):
+            cnt[i][z] += 1
+            if (depth[i] < A[z]):
+                continue
+            cur = i
+            l, v = 0, A[z]
+            while 0 < v:
+                if 0 < (v & 1):
+                    cur = par[cur][l]
+                v >>= 1
+                l += 1
+            cnt[cur][z] += cnt[i][z]
+        va = (cnt[i][0]+0.0) / N
+        vb = (cnt[i][1]+0.0) / N
         ans += va + vb - va*vb
+    return round(ans,6)
+
+flag = True
+N = 50000
+i = 0
+while True:
+    i += 1
+    A = 2
+    B = 3
+    arr = [x+1 for x in range(N-1)]
+    print(i,A,B)
+    print(arr[:10])
+    print(arr[-10:])
+    a = fun1(N,A,B,arr)
+    print(a)
     
-    for x in visits:
-        print(x)
-    print()
-
-    print('Case #{}: {}'.format(t+1,round(ans,7)))
-
-"""
-4
-8 1 2
-1 1 3 4 4 3 4
-10 3 4
-1 1 1 1 1 1 1 1 1
-17 3 1
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
-17 2 2
-1 1 3 4 4 3 4 7 6 9 9 11 11 14 15 16 17
-
-
-3
-8 3 2
-1 1 3 4 4 3 4
-10 3 4
-1 1 1 1 1 1 1 1 1
-4 3 1
-1 2 3
-"""
+    
+    b = fun2(N,A,B,arr)
+    print(b)
+    
+    flag = False
+    # flag = a==b
