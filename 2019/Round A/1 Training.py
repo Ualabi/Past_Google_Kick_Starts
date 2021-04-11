@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050e01/00000000000698d6
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050e01/00000000000698d6
 
 def getBestGroup(nums,P,maxi=float('inf')):
     for x in range(P,len(nums)+1):

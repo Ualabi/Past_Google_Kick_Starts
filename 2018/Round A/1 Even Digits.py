@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050edf/00000000000510ed
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050edf/00000000000510ed
 
 i = {'1':'0','3':'2','5':'4','7':'6','9':'8'}
 p = {'0':'2','1':'2','2':'4','3':'4','4':'6','5':'6','6':'8','7':'8','8':'0','9':'0'}

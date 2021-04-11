@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/0000000000337b4d
+# https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/0000000000337b4d
 # Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 class SegmentTree():

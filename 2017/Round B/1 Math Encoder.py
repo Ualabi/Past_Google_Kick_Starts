@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201d27/0000000000201b7b
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201d27/0000000000201b7b
 
 m = 1000000007
 pots = [1]

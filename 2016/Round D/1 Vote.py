@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201db8/0000000000201c06
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201db8/0000000000201c06
 
 lim = 2001
 dp = [[0 for _ in range(lim)] for __ in range(lim)]

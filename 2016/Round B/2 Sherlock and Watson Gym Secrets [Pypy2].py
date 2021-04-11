@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0c/0000000000201d32
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0c/0000000000201d32
 # Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 def exp(x,A,B,K):

@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201b7d/0000000000201c03
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201b7d/0000000000201c03
 
 T = int(input())
 for t in range(T):

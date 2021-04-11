@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0a/0000000000201ca4
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c0a/0000000000201ca4
 
 from copy import deepcopy as dc
 

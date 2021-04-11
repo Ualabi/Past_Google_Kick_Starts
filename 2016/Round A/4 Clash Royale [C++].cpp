@@ -1,4 +1,4 @@
-// Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201ca3
+// https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201ca3
 // Solution from: https://tinyurl.com/yd9gx4uo
 
 #include <cstring>

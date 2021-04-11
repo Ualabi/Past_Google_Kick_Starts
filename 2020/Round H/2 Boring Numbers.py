@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff49/000000000043b0c6
+# https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff49/000000000043b0c6
 
 i = set('13579')
 p = set('02468')
