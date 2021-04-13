@@ -3,30 +3,21 @@
 T = int(input())
 for t in range(T):
     N = int(input())
-    if N > 10:
-        exit()
+    N2 = N//2
     
     X, Y = [], []
     for n in range(N):
-        x,y = map(int,input().split())
-        X.append(x)
+        x,y = map(int, input().split())
         Y.append(y)
-    X.sort()
+        X.append(x)
     Y.sort()
+    X.sort()
+    for i in range(N): X[i] -= i
+    X.sort()
+    mx = X[N2]
+    my = Y[N2]
     
-    miny = float('inf')
-    for y in range(-510,510):
-        aux = 0
-        for yy in Y:
-            aux += abs(y-yy)
-        miny = min(miny,aux)
-    
-    minx = float('inf')
-    for x in range(-510,500):
-        aux = 0
-        for i,xx in enumerate(X):
-            aux += abs(x+i-xx)
-        minx = min(minx,aux)
-    
-    ans = miny+minx
+    ans = 0
+    for x in X: ans += abs(x - mx)
+    for y in Y: ans += abs(y - my)
     print('Case #{}: {}'.format(t+1,ans))
