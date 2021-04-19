@@ -5,19 +5,18 @@ for t in range(T):
     N = int(input())
     A = list(map(int,input().split()))
     
-    B = []
-    for i in range(1,N):
-        B.append(A[i]-A[i-1])
-
-    maxim, cnt = 2, 2
-    past = B[0]
-    for x in B[1:]:
-        if x == past:
+    cnt = 2
+    i, maxim = 2, 2
+    past = A[1]-A[0]
+    while i < N:
+        curr = A[i]-A[i-1]
+        if curr == past:
             cnt += 1
-        else:
             if cnt > maxim:
                 maxim = cnt
+        else:
             cnt = 2
-        past = x
+        past = curr
+        i += 1
         
-    print('Case #{}: {}'.format(t+1,max(maxim,cnt)))
+    print('Case #{}: {}'.format(t+1, maxim))
