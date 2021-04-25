@@ -35,4 +35,4 @@ for t in range(T):
     if heap:
         print("Case #{}: {} INDEFINITELY".format(t+1, N-len(heap)))
     else:
-        print("Case #{}: {} {}".format(t+1, rmv, maxi))
+        print("Case #{}: {} {}".format(t+1, cnt, maxi))
