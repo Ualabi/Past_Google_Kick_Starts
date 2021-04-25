@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201bfe/0000000000201d24
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201bfe/0000000000201d24
 # Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 T = int(input())

@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ee0/0000000000051005
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ee0/0000000000051005
 
 import sys 
 sys.setrecursionlimit(10**6) 

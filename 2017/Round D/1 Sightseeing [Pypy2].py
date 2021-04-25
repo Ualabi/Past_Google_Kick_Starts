@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201b77/0000000000201bfd
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201b77/0000000000201bfd
 # Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 inf = float('inf')

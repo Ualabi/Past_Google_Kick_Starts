@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/00000000003379bb
+# https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/00000000003379bb
 
 def dfs(letras,taken,word):
     if len(letras) == len(taken):

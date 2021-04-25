@@ -1,4 +1,4 @@
-// Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ee1/00000000000510ef
+// https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ee1/00000000000510ef
 // Solution from: https://gist.github.com/htfy96/20bccbb3facc471a091b8a6878a2dea8
 
 #include <iostream>

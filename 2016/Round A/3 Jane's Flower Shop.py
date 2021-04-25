@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201c09
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201c09
 
 def fun1(m,M):
     ans = [1]

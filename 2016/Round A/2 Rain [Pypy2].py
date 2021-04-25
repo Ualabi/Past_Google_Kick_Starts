@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201dbb
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201ca2/0000000000201dbb
 # Use PyPy2 to run it, it does not pass the TLE with Python 3/2
 
 ax = [-1,1,0,0]

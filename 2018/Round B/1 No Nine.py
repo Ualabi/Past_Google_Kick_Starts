@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ff4/0000000000051183
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050ff4/0000000000051183
 
 def solve(N):
     a = 0

@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050e01/000000000006987d
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000050e01/000000000006987d
 
 def solve(arr,R,C):
     queue = []
@@ -54,7 +54,7 @@ def solve(arr,R,C):
             l = m+1
         
     return r
-#####################################################
+
 T = int(input())
 for t in range(T):
     [R,C] = list(map(int,input().split()))

@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000436140/000000000068c509
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000436140/000000000068c509
 
 memo = [[0 for _ in range(1001)] for _ in range(1001)]
 for r in range(2,1001):

@@ -1,4 +1,4 @@
-# Link: https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c97/0000000000201d25
+# https://codingcompetitions.withgoogle.com/kickstart/round/0000000000201c97/0000000000201d25
 
 m = 1000000007
 T = int(input())
