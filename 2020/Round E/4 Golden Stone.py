@@ -94,10 +94,11 @@ for t in range(T):
                 outs_recipe[recipes[r]].append(base_outs[r])
             else:
                 outs_recipe[recipes[r]] = [base_outs[r]]
-    print()
-    print(relevant_stones)
-    print(outs_recipe)
-    print()
+    # print()
+    # print(relevant_stones)
+    # print(outs_recipe)
+    # print()
+    print(Table(table))
 
     # Create missing 
     hp = []
@@ -112,8 +113,22 @@ for t in range(T):
                 order_map[val] = {(i, stone)}
                 past_sums.add(val)
                 heappush(hp, val)
-    
     print(hp)
+    # Create recipes_stones
+    for r in range(R):
+        if base_outs[r] in relevant_stones:
+            for stone in recipes[r]:
+                recipes_stone[stone].append(r)
+
+    # for m in order_map:
+    #     print(m,order_map[m])
+    # print()
+    
+    # for stone in recipes_stone:
+    #     print(stone, recipes_stone[stone])
+    # print()
+
+    # print(hp)
     # Run the optimization
     while hp:
         val = hp[0]
@@ -126,18 +141,21 @@ for t in range(T):
             del(order_map[val])
         else:
             node, curr_stone = order_map[val].pop()
-        
-        # print('<>', node, curr_stone)
+
+        print('<>', node, curr_stone, hp)
+        print(Table(table))
         for ind_recipe in recipes_stone[curr_stone]:
-            print('<>', node, curr_stone, recipes[ind_recipe], outs_recipe[recipes[ind_recipe]])
+            # print('<>', node, curr_stone, recipes[ind_recipe], outs_recipe[recipes[ind_recipe]])
             sum_recipe = 0
             for sum_stone in recipes[ind_recipe]:
                 sum_recipe += table[node][sum_stone]
             for out_stone in outs_recipe[recipes[ind_recipe]]:
                 if sum_recipe < table[node][out_stone]:
-                    # print('->',node,out_stone)
+                    #print('->',node,out_stone)
                     past_sum = table[node][out_stone]
-                    order_map[past_sum].remove((node,out_stone))
+                    if past_sum < inf:
+                        order_map[past_sum].remove((node,out_stone))
+                        
                     table[node][out_stone] = sum_recipe
                     if sum_recipe in past_sums:
                         order_map[sum_recipe].add((node,out_stone))
@@ -152,7 +170,8 @@ for t in range(T):
                         if sum_recipe < table[link_node][out_stone]:
                             # print(link_node,out_stone)
                             past_sum = table[link_node][out_stone]
-                            order_map[past_sum].remove((link_node,out_stone))
+                            if past_sum < inf:
+                                order_map[past_sum].remove((link_node,out_stone))
                             table[link_node][out_stone] = sum_recipe
                             if sum_recipe in past_sums:
                                 order_map[sum_recipe].add((link_node,out_stone))
@@ -161,8 +180,8 @@ for t in range(T):
                                 past_sums.add(sum_recipe)
                                 heappush(hp, sum_recipe)
 
-    print()
-    print(Table(table))
+    # print()
+    # print(Table(table))
 
     ans = inf
     for i in range(N):
