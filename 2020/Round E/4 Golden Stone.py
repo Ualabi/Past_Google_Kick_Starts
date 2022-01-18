@@ -2,18 +2,6 @@
 
 from heapq import *
 
-def Table(tb):
-    ans = ""
-    for row in tb:
-        aux = ""
-        for cell in row:
-            word = str(row[cell])
-            aux += " "*(5-len(word))+word
-        ans += aux + "\n"
-    return ans + "\n"
-
-kkk = []
-ppp = []
 lmt = 10**12
 T = int(input())
 for t in range(T):
@@ -51,18 +39,19 @@ for t in range(T):
         inverse_recipes[out_stone] = inverse_recipes.get(out_stone, set()) | set(b)
 
     # Get the relevant stones
-    order = []
-    queue = [0]
+    queue = {0}
     relevant_stones = set()
     while queue:
-        new_queue = []
-        for stone in queue:
-            order.append(stone)
-            relevant_stones.add(stone)
-            for next_node in inverse_recipes.get(stone,set()):
-                if next_node not in relevant_stones:
-                    new_queue.append(next_node)
-        queue = new_queue
+        stone = queue.pop()
+        while queue and stone in relevant_stones:
+            stone = queue.pop()
+        if stone in relevant_stones:
+            break
+
+        relevant_stones.add(stone)
+        for next_node in inverse_recipes.get(stone,set()):
+            if next_node not in relevant_stones:
+                queue.add(next_node)
 
     # Get the relevant nodes with their stones
     recipes_stone = {}
@@ -75,16 +64,8 @@ for t in range(T):
     # Propagate the seed nodes
     table = [{i:inf for i in relevant_stones} for _ in range(N)]
     for stone in relevant_stones:
-        lvl = 0
-        queue = seed_nodes[stone]
-        while queue:
-            new_queue = set()
-            for node in queue:
-                if table[node][stone] == inf:
-                    table[node][stone] = lvl
-                    new_queue |= links[node]
-            queue = new_queue
-            lvl += 1
+        for node in seed_nodes[stone]:
+            table[node][stone] = 0
     
     # Save the relevant recepies
     outs_recipe = {}
@@ -94,18 +75,13 @@ for t in range(T):
                 outs_recipe[recipes[r]].append(base_outs[r])
             else:
                 outs_recipe[recipes[r]] = [base_outs[r]]
-    # print()
-    # print(relevant_stones)
-    # print(outs_recipe)
-    # print()
-    print(Table(table))
 
-    # Create missing 
+    # Create priority queue
     hp = []
     order_map = {}
     past_sums = set()
     for i in range(N):
-        for stone in (relevant_stones-{0}):
+        for stone in relevant_stones:
             val = table[i][stone]
             if val in past_sums:
                 order_map[val].add((i, stone))
@@ -113,22 +89,13 @@ for t in range(T):
                 order_map[val] = {(i, stone)}
                 past_sums.add(val)
                 heappush(hp, val)
-    print(hp)
+                
     # Create recipes_stones
     for r in range(R):
         if base_outs[r] in relevant_stones:
             for stone in recipes[r]:
                 recipes_stone[stone].append(r)
 
-    # for m in order_map:
-    #     print(m,order_map[m])
-    # print()
-    
-    # for stone in recipes_stone:
-    #     print(stone, recipes_stone[stone])
-    # print()
-
-    # print(hp)
     # Run the optimization
     while hp:
         val = hp[0]
@@ -136,26 +103,31 @@ for t in range(T):
             heappop(hp)
             del(order_map[val])
             continue
-        elif len(order_map[val]) == 1:
-            heappop(hp)
-            del(order_map[val])
         else:
             node, curr_stone = order_map[val].pop()
+        
+        # Optimize with moving the stone
+        for link_node in links[node]:
+            if val+1 < table[link_node][curr_stone]:
+                past_sum = table[link_node][curr_stone]
+                order_map[past_sum].remove((link_node,curr_stone))
+                table[link_node][curr_stone] = val+1
+                if val+1 in past_sums:
+                    order_map[val+1].add((link_node,curr_stone))
+                else:
+                    order_map[val+1] = {(link_node,curr_stone)}
+                    past_sums.add(val+1)
+                    heappush(hp, val+1)
 
-        print('<>', node, curr_stone, hp)
-        print(Table(table))
+        # Optimize with recipies
         for ind_recipe in recipes_stone[curr_stone]:
-            # print('<>', node, curr_stone, recipes[ind_recipe], outs_recipe[recipes[ind_recipe]])
             sum_recipe = 0
             for sum_stone in recipes[ind_recipe]:
                 sum_recipe += table[node][sum_stone]
             for out_stone in outs_recipe[recipes[ind_recipe]]:
-                if sum_recipe < table[node][out_stone]:
-                    #print('->',node,out_stone)
-                    past_sum = table[node][out_stone]
-                    if past_sum < inf:
-                        order_map[past_sum].remove((node,out_stone))
-                        
+                past_sum = table[node][out_stone]
+                if sum_recipe < past_sum:
+                    order_map[past_sum].remove((node,out_stone))
                     table[node][out_stone] = sum_recipe
                     if sum_recipe in past_sums:
                         order_map[sum_recipe].add((node,out_stone))
@@ -164,25 +136,6 @@ for t in range(T):
                         past_sums.add(sum_recipe)
                         heappush(hp, sum_recipe)
 
-                    sum_recipe += 1                    
-                    propagation = links[node]
-                    for link_node in propagation:
-                        if sum_recipe < table[link_node][out_stone]:
-                            # print(link_node,out_stone)
-                            past_sum = table[link_node][out_stone]
-                            if past_sum < inf:
-                                order_map[past_sum].remove((link_node,out_stone))
-                            table[link_node][out_stone] = sum_recipe
-                            if sum_recipe in past_sums:
-                                order_map[sum_recipe].add((link_node,out_stone))
-                            else:
-                                order_map[sum_recipe] = {(link_node,out_stone)}
-                                past_sums.add(sum_recipe)
-                                heappush(hp, sum_recipe)
-
-    # print()
-    # print(Table(table))
-
     ans = inf
     for i in range(N):
         ans = min(table[i][0], ans)
@@ -190,8 +143,3 @@ for t in range(T):
         ans = -1
 
     print("Case #{}: {}".format(t+1, ans))
-    kkk.append("Case #{}: {}".format(t+1, ans))
-
-for k in kkk:
-    print(k)
-print(ppp)
